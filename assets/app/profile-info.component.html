@@ -1,0 +1,9 @@
+<div class="column">
+    <!-- *ngIf="generalFields" -->
+    <div class="info-container">
+        <card-description cardTitle="Datos Generales" [dataFields]="generalFields" [data]="generalData"></card-description>
+        <card-description cardTitle="Datos de Contacto" [dataFields]="contactFields" [data]="contactData">
+        </card-description>
+    </div>
+    <!--   <button class="button-primary self-end m-top-9" *ngIf="canEdit" [routerLink]="['edit']">Editar</button> -->
+</div>

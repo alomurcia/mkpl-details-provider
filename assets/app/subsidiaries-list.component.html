@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="column">
+        <h3 class="row middle poppins deep-sea-green title-small bold m-bottom-10">Sucursales existentes
+            <span class="quantity text-big poppins bold deep-sea-green m-left-3">{{ subsidiaries?.length }}</span>
+        </h3>
+    </div>
+    <div class="screen-container">
+        <div class="card-container">
+            <div class="subsidiaries-list-container">
+                <div class="table-header">
+                    <div *ngFor="let header of tableInfo">
+                        <h5 class="title-small-poppins bold deep-sea-green">
+                            {{ header.label }}
+                        </h5>
+                        <div class="m-left-2 sortable-container" *ngIf="header.sortable">
+                            <button type="button" (click)="handleOrder(header.id)" class="icon-sortable">
+                <i class="icon icon-long-down-arrow hoki text-big"></i>
+              </button>
+                            <button type="button" (click)="handleOrder(header.id)" class="icon-sortable">
+                <i class="icon icon-long-up-arrow hoki text-big"></i>
+              </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-content column">
+                    <div class="m-bottom-2 subsidiaries-list-info" *ngFor="let subsidiary of subsidiaries">
+                        <span class="text-normal bold" [ngClass]="subsidiary.status ? 'deep-sea-green' : 'jungle-mist'">{{ subsidiary.id }}</span>
+                        <span class="text-normal" [ngClass]="subsidiary.status ? 'deep-sea-green' : 'jungle-mist'">{{ subsidiary.name }}</span>
+                        <span class="text-normal" [ngClass]="subsidiary.status ? 'deep-sea-green' : 'jungle-mist'">{{ subsidiary.city }}</span>
+                        <span class="text-normal" [ngClass]="subsidiary.status ? 'deep-sea-green' : 'jungle-mist'">{{ subsidiary.address | shortLargeStrings: 25}}</span>
+                        <span class="text-normal deep-sea-green" [ngClass]="subsidiary.status ? 'status-active' : 'status-inactive'">{{ subsidiary.status ? 'Activo' : 'Inactivo' }}</span>
+                        <!-- <div class="actions-container row  middle">
+              <a *ngIf="canViewDetail" class="action-button icon icon-cross jungle-mist" title="Ver"
+                [routerLink]="['/subsidiary', subsidiary.id]"></a>
+              <a *ngIf="canEdit" [routerLink]="[subsidiary.id, 'edit']"
+                class="action-button icon icon-pencil jungle-mist" title="Editar"></a>
+              <button type="button" class="action-button icon jungle-mist" *ngIf="canUpdateStatus"
+                [ngClass]="subsidiary.status ? 'icon-eye-on' : 'icon-eye-off'" title="Deshabilitar"
+                (click)="disableSubsidiary(subsidiary.id)">
+              </button>
+            </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  <div class="row end m-top-9">
+        <a class="button-primary" *ngIf="canCreateSubsidiary" [routerLink]="['/subsidiary/create']">Crear sucursal</a>
+    </div> -->
+</div>
