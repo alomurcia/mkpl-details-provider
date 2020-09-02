@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ROUTES } from './constants/routes';
-import { ActivatedRoute } from '@angular/router';
-import { ROLES, SCOPES } from './constants/auth';
-import { Location } from '@angular/common';
-//import { Auth0Service } from 'src/app/services/auth0.service';
+import { ROLES } from './constants/auth';
+import { SubsidiaryService } from './services/subsidiary.service';
+import { EMPTY } from 'rxjs';
 
 declare const Liferay: any;
 
@@ -15,27 +13,40 @@ declare const Liferay: any;
 })
 
 export class AppComponent implements OnInit {
-  //providersRoute = ROUTES.providers;
   dataToSubsidiaries: any;
-  //ROLES = ROLES;
-  //canReadSubsidiaries = false;
+  
+  // TODO traer permisos desde Liferay
+  canReadSubsidiaries = false;
 
-  constructor( /* private route: ActivatedRoute *//*, private location: Location */) { }
+  constructor( private subsidiaryService: SubsidiaryService ) { }
 
   ngOnInit() {
-    console.log('123123');
-      /*  this.route.data.subscribe(data => {
-        console.log(this.route.snapshot.params.id);
-        console.log('123123');
-      
-    });   */
-    /*this.authService.getScopes().subscribe(scopes => {
-      this.canReadSubsidiaries = scopes.includes(SCOPES.readSubsidiaries);
-    })*/
-//this.dataToSubsidiaries = data.subsidiaries;
-  }
+    // TODO Traer desde Liferay el rol
+    let role = ROLES.backoffice;
 
-  /* goToBack() {
-    this.location.back();
-  } */
+    if (role === ROLES.backoffice) {
+      this.dataToSubsidiaries = this.subsidiaryService.getSubsidiaries(this.getURLParameter("id"));
+    } else if (role === ROLES.provider) {
+      // TODO se deben cargar las sucursales  del id de proveedor del proveedor logueado
+      let idProveedor = 1;
+      this.dataToSubsidiaries = this.subsidiaryService.getSubsidiaries(idProveedor);
+    } else {
+      return EMPTY;
+    }
+
+    // TODO actualizar info desde permisos en liferay si canReadSubsidiaries
+    this.canReadSubsidiaries = true;
+  }
+  
+	// this.getURLParameter("id")
+	private getURLParameter(paramName: string){
+	  var pageURL = window.location.search.substring(1);
+	  var variables = pageURL.split('&');
+	  for (var i = 0; i < variables.length; i++) {
+	    var param = variables[i].split('=');
+	    if (param[0] == paramName) {
+	      return param[1];
+	    }
+	  }
+	}​
 }

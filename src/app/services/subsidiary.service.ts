@@ -13,13 +13,15 @@ export class SubsidiaryService {
 
   constructor(private http: HttpClient) { }
 
-  getSubsidiaries({ providerId, order, orderBy }: SubsidiaryRequestParams): Observable<SubsidiaryListResponse> {
-    console.log('123123123');
-    const params = createPageHttp({ order, orderBy }).set('provider_id', providerId.toString());
-     return this.http.get<SubsidiaryListResponse>
-      (`http://localhost:8081/api/subsidiary`, { params }); 
+  getSubsidiaries(providerId: any, order = 'id', orderBy = 'ascending'): any {
+    const params = new HttpParams().set('limit', '10').set('page', '0').set('order', order)
+      .set('order_by', orderBy).set('provider_id', providerId.toString());
+    
+    this.http.get<any>(`http://localhost:8081/api/subsidiary`, { params })
+    .subscribe( data => {
+      return data; });
   }
-//TODO
+  
   toggleSubsidiaries(id: string) {
     return this.http.put(`http://localhost:8081/api/subsidiary/active/id=2`, {});
   }

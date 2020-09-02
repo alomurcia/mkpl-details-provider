@@ -61,8 +61,8 @@ export class SubsidiariesListComponent{
   handleOrder(id:any) {
     const orderBy = this.orderBy ? ASC : DESC;
     this.orderBy = !this.orderBy;
-    this.subsidiaryService.getSubsidiaries({ providerId: 1, order: 'id', orderBy }).subscribe(({ content }) => {
+    /* TODO pendiente arreglar this.subsidiaryService.getSubsidiaries({ providerId: 1, order: 'id', orderBy }).subscribe(({ content }) => {
       this.subsidiaries = content;
-    });
+    });*/
   }
 }

@@ -9,7 +9,6 @@ import { ROUTES } from './constants/routes';
 import { GENERAL_PROFILE_FIELDS, CONTACT_PROFILE_FIELDS } from './constants/constants';
 import { SCOPES, ROLES } from './constants/auth';
 import { combineLatest } from 'rxjs';
-//import { Auth0Service } from 'src/app/services/auth0.service';
 
 declare const Liferay: any;
 
@@ -19,29 +18,30 @@ declare const Liferay: any;
     Liferay.ThemeDisplay.getPathContext() + 
     '/o/mkpl-details-provider/app/profile-info.component.html'
 })
-
-
 export class ProfileInfoComponent implements OnInit {
   providerDetails: ProviderDetails;
-  generalFields:any;
+  generalFields: any;
   contactFields = CONTACT_PROFILE_FIELDS;
   objectKeys = Object.keys;
   generalData: ProviderGeneralData;
   contactData: ProviderContactData;
   providersRoute = ROUTES.providers;
   canEdit = false;
-  @Input() roleProfile: string = 'provideradmin';
+  @Input() roleProfile: string;
 
-  constructor(
-    private route: ActivatedRoute/* ,
-   // private authService: Auth0Service */
-  ) {}
+  providerId: string;
+
+  constructor( ) {}
 
   ngOnInit() {
-    console.log('profile');
-    
-      combineLatest([this.route.data]).subscribe(
-      ([{ user }]) => {
+    this.providerId = this.getURLParameter("id");
+
+    /* TODO llamar el servicio http://localhost:8081/api/provider/:idProvider
+    con la respuesta llenar las cosas de abajo
+    /*
+    .subscribe(
+      (user) => {
+        console.log('**** data: ', data);
         this.generalData = {
           name: this.roleProfile === ROLES.subsidiary ? user.alias : user.name,
           nit: user.nit,
@@ -54,17 +54,26 @@ export class ProfileInfoComponent implements OnInit {
           phone: user.phone,
           email: user.email,
           adminEmail: user.adminUser.email
-        }; 
-       /*  this.canEdit =
+        };
+        this.canEdit =
           this.roleProfile === ROLES.provider
             ? scopes.includes(SCOPES.updateProvider)
-            : scopes.includes(SCOPES.updateSubsidiary); */
-            this.generalFields = GENERAL_PROFILE_FIELDS[this.roleProfile];
+            : scopes.includes(SCOPES.updateSubsidiary);
+        this.generalFields = GENERAL_PROFILE_FIELDS[this.roleProfile];
       }
-    ); 
+    );
+    */
   }
-
-  /* lastItem(index: number, object:any) {
-    return index === this.objectKeys(object).length - 1;
-  } */
+  
+	// this.getURLParameter("id")
+	private getURLParameter(paramName: string){
+	  var pageURL = window.location.search.substring(1);
+	  var variables = pageURL.split('&');
+	  for (var i = 0; i < variables.length; i++) {
+	    var param = variables[i].split('=');
+	    if (param[0] == paramName) {
+	      return param[1];
+	    }
+	  }
+	}​
 }

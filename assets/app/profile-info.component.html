@@ -1,9 +1,12 @@
 <div class="column">
-    <!-- *ngIf="generalFields" -->
-    <div class="info-container">
+    <div class="info-container" *ngIf="generalFields">
         <card-description cardTitle="Datos Generales" [dataFields]="generalFields" [data]="generalData"></card-description>
-        <card-description cardTitle="Datos de Contacto" [dataFields]="contactFields" [data]="contactData">
-        </card-description>
+        <card-description cardTitle="Datos de Contacto" [dataFields]="contactFields" [data]="contactData"></card-description>
     </div>
-    <!--   <button class="button-primary self-end m-top-9" *ngIf="canEdit" [routerLink]="['edit']">Editar</button> -->
+    <!-- TODO se cambió por routerLink
+    <button class="button-primary self-end m-top-9" *ngIf="canEdit" [routerLink]="['edit']">Editar</button>
+    -->
+    <a class="button-primary self-end m-top-9 link-simple" href="/providers/edit?id={{providerId}}">
+        Historial de pedidos
+    </a>
 </div>

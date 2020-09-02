@@ -1,15 +1,20 @@
 <div class="screen-container column">
     <div class="column start">
-        <!--  <button class="bold m-bottom-7 row middle" (click)="goToBack()">
+    <!-- TODO pendiente cambiar botón sin routerLink a /providers -->
+      <!-- <button class="bold m-bottom-7 row middle">
 		<span class="icon icon-long-left-arrow back-arrow deep-sea-green"></span>
 		<span class="poppins text-big deep-sea-green bold m-left-2">Volver</span>
-	  </button> -->
-        <h3 class="title-small bold deep-sea-green m-bottom-9">
-            Detalle del proveedor
-        </h3>
+      </button> -->
+      <a class="text-big poppins bold deep-sea-green m-bottom-6 row middle link-simple" href="/providers">
+		<i class="icon icon-long-left-arrow deep-sea-green title-medium m-right-1"></i>
+		Volver
+	  </a>
+      <h3 class="title-small bold deep-sea-green m-bottom-9">
+        Detalle del proveedor
+      </h3>
     </div>
     <profile-info> </profile-info>
-    <!--  <div *ngIf="dataToSubsidiaries" class="m-top-6">
+    <!-- TODO pendiente migrar componente  <div *ngIf="dataToSubsidiaries" class="m-top-6">
         <subsidiaries-list [dataToSubsidiaries]="dataToSubsidiaries"></subsidiaries-list>
     </div> -->
 </div>
