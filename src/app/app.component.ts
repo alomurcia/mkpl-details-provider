@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ROLES } from './constants/auth';
 import { SubsidiaryService } from './services/subsidiary.service';
+import { SubsidiaryListResponse } from './interfaces/subsidiaries.interface';
 import { EMPTY } from 'rxjs';
 
 declare const Liferay: any;
@@ -13,7 +14,8 @@ declare const Liferay: any;
 })
 
 export class AppComponent implements OnInit {
-  dataToSubsidiaries: any;
+  dataToSubsidiaries: SubsidiaryListResponse;
+  ROLES = ROLES;
   
   // TODO traer permisos desde Liferay
   canReadSubsidiaries = false;
@@ -21,21 +23,25 @@ export class AppComponent implements OnInit {
   constructor( private subsidiaryService: SubsidiaryService ) { }
 
   ngOnInit() {
+    // TODO actualizar info desde permisos en liferay si canReadSubsidiaries
+    this.canReadSubsidiaries = true;
+
     // TODO Traer desde Liferay el rol
     let role = ROLES.backoffice;
 
-    if (role === ROLES.backoffice) {
-      this.dataToSubsidiaries = this.subsidiaryService.getSubsidiaries(this.getURLParameter("id"));
-    } else if (role === ROLES.provider) {
-      // TODO se deben cargar las sucursales  del id de proveedor del proveedor logueado
-      let idProveedor = 1;
-      this.dataToSubsidiaries = this.subsidiaryService.getSubsidiaries(idProveedor);
+    if (this.canReadSubsidiaries) {
+      if (role === ROLES.backoffice) {
+        this.subsidiaryService.getSubsidiaries(this.getURLParameter("id"))
+          .subscribe( response => this.dataToSubsidiaries = response );
+      } else if (role === ROLES.provider) {
+        // TODO se deben cargar las sucursales del id de proveedor del proveedor logueado
+        let idProveedor = 1;
+        this.subsidiaryService.getSubsidiaries(idProveedor)
+          .subscribe( response => this.dataToSubsidiaries = response );
+      }
     } else {
       return EMPTY;
     }
-
-    // TODO actualizar info desde permisos en liferay si canReadSubsidiaries
-    this.canReadSubsidiaries = true;
   }
   
 	// this.getURLParameter("id")

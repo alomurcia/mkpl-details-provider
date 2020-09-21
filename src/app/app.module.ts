@@ -23,9 +23,8 @@ import { ShortLargeStringsPipe } from '../app/pipes/short-large-strings.pipe';
 	],
 	declarations: [
 		AppComponent,
-		 CardDescriptionComponent,
+		CardDescriptionComponent,
 		CardFieldComponent,
-		//DynamicLoader,
 		ProfileInfoComponent,
 		SubsidiariesListComponent,
 		ShortLargeStringsPipe

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-//import { environment } from 'src/environments/environment';
 import { SubsidiaryRequestParams, SubsidiaryListResponse, SubsidiaryDetail, Subsidiary } from '../interfaces/subsidiaries.interface';
 import { Observable } from 'rxjs';
-import { createPageHttp } from '../utils/request';
 
 @Injectable({
   providedIn: 'root'
@@ -13,22 +11,21 @@ export class SubsidiaryService {
 
   constructor(private http: HttpClient) { }
 
-  getSubsidiaries(providerId: any, order = 'id', orderBy = 'ascending'): any {
+  getSubsidiaries(providerId: any, order = 'id', orderBy = 'ascending'): Observable<SubsidiaryListResponse> {
     const params = new HttpParams().set('limit', '10').set('page', '0').set('order', order)
       .set('order_by', orderBy).set('provider_id', providerId.toString());
     
-    this.http.get<any>(`http://localhost:8081/api/subsidiary`, { params })
-    .subscribe( data => {
-      return data; });
+      // TODO cambiar ruta pendiente paginador
+      return this.http.get<SubsidiaryListResponse>(`http://localhost:8081/api/subsidiary`, { params });
+      // return this.http.get<SubsidiaryListResponse>(`http://localhost:8080/o/ProviderCompraDigitalPortlet/api/subsidiary/list`, { params });
   }
   
   toggleSubsidiaries(id: string) {
-    return this.http.put(`http://localhost:8081/api/subsidiary/active/id=2`, {});
+    return this.http.put(`http://localhost:8080/o/ProviderCompraDigitalPortlet/api/subsidiary/active/${id}`, {});
   }
 
   getSubsidiary(id: string): Observable<SubsidiaryDetail> {
     return this.http.get<SubsidiaryDetail>(`http://localhost:8081/api/subsidiary/${id}`);
-    return;
   }
 
   updateSubsidiary(subsidiary:any, cityId: string, providerId: string) {

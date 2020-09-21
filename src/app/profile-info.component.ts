@@ -1,14 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   ProviderGeneralData,
   ProviderDetails,
   ProviderContactData
 } from './interfaces/provider.interface';
-import { ROUTES } from './constants/routes';
-import { GENERAL_PROFILE_FIELDS, CONTACT_PROFILE_FIELDS } from './constants/constants';
-import { SCOPES, ROLES } from './constants/auth';
-import { combineLatest } from 'rxjs';
+import { GENERAL_PROFILE_FIELDS, CONTACT_PROFILE_FIELDS } from './constants/profile-info-constants';
+import { ROLES } from './constants/auth';
+import { ProviderService } from './services/provider.service';
 
 declare const Liferay: any;
 
@@ -25,44 +23,43 @@ export class ProfileInfoComponent implements OnInit {
   objectKeys = Object.keys;
   generalData: ProviderGeneralData;
   contactData: ProviderContactData;
-  providersRoute = ROUTES.providers;
   canEdit = false;
   @Input() roleProfile: string;
 
   providerId: string;
 
-  constructor( ) {}
+  constructor(private providerService: ProviderService) { }
 
   ngOnInit() {
     this.providerId = this.getURLParameter("id");
 
-    /* TODO llamar el servicio http://localhost:8081/api/provider/:idProvider
-    con la respuesta llenar las cosas de abajo
-    /*
-    .subscribe(
-      (user) => {
-        console.log('**** data: ', data);
-        this.generalData = {
-          name: this.roleProfile === ROLES.subsidiary ? user.alias : user.name,
-          nit: user.nit,
-          country: user.location.city.region.country.name,
-          city: user.location.city.name,
-          address: user.location.address
-        };
-        this.contactData = {
-          name: this.roleProfile === ROLES.subsidiary ? user.name : user.contactName,
-          phone: user.phone,
-          email: user.email,
-          adminEmail: user.adminUser.email
-        };
-        this.canEdit =
-          this.roleProfile === ROLES.provider
-            ? scopes.includes(SCOPES.updateProvider)
-            : scopes.includes(SCOPES.updateSubsidiary);
-        this.generalFields = GENERAL_PROFILE_FIELDS[this.roleProfile];
-      }
-    );
-    */
+    this.providerService.getProviderProfile(this.providerId).subscribe(user =>{
+      this.generalData = {
+        /* TODO se cambió user.alias a user.name
+        name: this.roleProfile === ROLES.subsidiary ? user.alias : user.name, */
+        name: user.name,
+        nit: user.nit,
+        country: user.location.city.region.country.name,
+        city: user.location.city.name,
+        address: user.location.address
+      };
+
+      this.contactData = {
+        name: this.roleProfile === ROLES.subsidiary ? user.name : user.contact_name,
+        phone: user.phone,
+        email: user.email,
+        adminEmail: user.admin_user.email
+      };
+      
+      // TODO traer permisos desde liferay
+      // canEdit es true si (rol es provider && tiene permiso de updateProvider) || (tiene permiso de updateSubsidiary)
+      this.canEdit = true;
+      this.generalFields = GENERAL_PROFILE_FIELDS[this.roleProfile];
+    });
+  }
+
+  lastItem(index: number, object: any) {
+    return index === this.objectKeys(object).length - 1;
   }
   
 	// this.getURLParameter("id")

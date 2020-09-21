@@ -1,8 +1,7 @@
- .screen-container {
+ .screen-container-prov-detail {
      margin: 0 auto;
      max-width: 1135px;
      width: 100%;
-     align-items: flex-end;
  }
  
  .back-arrow {

@@ -1,24 +1,20 @@
-import { ROLES } from './constants/auth';
 import { Component, OnInit, Input } from '@angular/core';
 
+import { ROLES } from './constants/auth';
 import { SubsidiaryService } from './services/subsidiary.service';
-import { ASC, DESC } from './constants/queries';
-import { tableHeaders } from './constants/constants';
+import { tableHeaders } from './constants/subsidiaries-list-constants';
 import { DataPaginator } from './interfaces/paginator.interface';
 import { Subsidiary, SubsidiaryListResponse } from './interfaces/subsidiaries.interface';
-//import { Auth0Service } from './services/auth0.service';
-import { SCOPES } from './constants/auth';
 
 declare const Liferay: any;
 
 @Component({
   selector: 'subsidiaries-list',
-  templateUrl: 
+  templateUrl:
     Liferay.ThemeDisplay.getPathContext() + 
-    '/o/mkpl-details-provider/app/subsidiaries-list.component.html'
+    '/o/mkpl-subsidiary/app/subsidiaries-list.component.html'
 })
-
-export class SubsidiariesListComponent{
+export class SubsidiariesListComponent implements OnInit {
   subsidiaries: Subsidiary[];
   dataToPaginate: DataPaginator;
   tableInfo: Array<{ label: string; id: string; sortable: boolean }> = tableHeaders;
@@ -32,22 +28,23 @@ export class SubsidiariesListComponent{
   constructor(private subsidiaryService: SubsidiaryService) { }
 
   ngOnInit() {
-    //TODO permisos de sesión
+    // TODO traer permisos de liferay
+    // TODO si tiene permisos de createSubsidiary, updateSubsidiaryStatus, readSubsidiary
+    this.canCreateSubsidiary = true;
+    this.canUpdateStatus = true;
+    this.canViewDetail = true;
 
-   /*  this.authService.getProfile().subscribe(user => {
-      this.authService.getScopes().subscribe(scopes => {
-        this.canCreateSubsidiary = scopes.includes(SCOPES.createSubsidiary);
-        this.canUpdateStatus = scopes.includes(SCOPES.updateSubsidiaryStatus);
-        this.canEdit = user.role !== ROLES.backoffice && scopes.includes(SCOPES.updateSubsidiary);
-        this.canViewDetail = scopes.includes(SCOPES.readSubsidiary);
-      });
-    }); */
+    // TODO traer de liferay rol y permisos
+    // TODO si no es backoffice y tiene permiso de updateSubsidiary
+    let role = ROLES.provider;
+    this.canEdit = role !== ROLES.backoffice && true;
+
     const { content, ...dataPaginator } = this.dataToSubsidiaries;
     this.subsidiaries = content;
     this.dataToPaginate = dataPaginator;
   }
 
-  disableSubsidiary(id:any) {
+  disableSubsidiary(id: any) {
     this.subsidiaryService
       .toggleSubsidiaries(id)
       .subscribe(
@@ -55,14 +52,15 @@ export class SubsidiariesListComponent{
           (this.subsidiaries = this.subsidiaries.map(elem =>
             elem.id === elemId ? { ...elem, status } : elem
           ))
-      ); 
+      );
   }
 
-  handleOrder(id:any) {
-    const orderBy = this.orderBy ? ASC : DESC;
+  handleOrder(id: any) {
+    const orderBy = this.orderBy ? 'ascending' : 'descending';
     this.orderBy = !this.orderBy;
-    /* TODO pendiente arreglar this.subsidiaryService.getSubsidiaries({ providerId: 1, order: 'id', orderBy }).subscribe(({ content }) => {
+    // TODO traer el id de proveedor
+    this.subsidiaryService.getSubsidiaries(1, id, orderBy).subscribe(({ content }) => {
       this.subsidiaries = content;
-    });*/
+    });
   }
 }
