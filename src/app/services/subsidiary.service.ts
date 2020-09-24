@@ -15,9 +15,7 @@ export class SubsidiaryService {
     const params = new HttpParams().set('limit', '10').set('page', '0').set('order', order)
       .set('order_by', orderBy).set('provider_id', providerId.toString());
     
-      // TODO cambiar ruta pendiente paginador
-      return this.http.get<SubsidiaryListResponse>(`http://localhost:8081/api/subsidiary`, { params });
-      // return this.http.get<SubsidiaryListResponse>(`http://localhost:8080/o/ProviderCompraDigitalPortlet/api/subsidiary/list`, { params });
+      return this.http.get<SubsidiaryListResponse>(`http://localhost:8080/o/ProviderCompraDigitalPortlet/api/subsidiary/list`, { params });
   }
   
   toggleSubsidiaries(id: string) {
